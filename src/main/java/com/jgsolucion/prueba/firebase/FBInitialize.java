@@ -35,6 +35,7 @@ public class FBInitialize {
                     .build();
 
             FirebaseApp.initializeApp(options);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
