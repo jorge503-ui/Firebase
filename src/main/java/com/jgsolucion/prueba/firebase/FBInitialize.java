@@ -23,6 +23,7 @@ public class FBInitialize {
         try {
             FileInputStream serviceAccount =
                     new FileInputStream(res.getFile().getPath());
+
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://reslyapp.firebaseio.com/")
