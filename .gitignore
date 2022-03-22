@@ -2,6 +2,7 @@ HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/test/**/target/
+reslyapp-firebase-adminsdk-xem7v-762e48ee72.json
 
 ### STS ###
 .apt_generated

@@ -3,19 +3,26 @@ package com.jgsolucion.prueba.firebase;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class FBInitialize {
+
+    @Value("classpath:Firebase/reslyapp-firebase-adminsdk-xem7v-762e48ee72.json")
+    private Resource res;
 
     @PostConstruct
     public void initialize() {
         try {
             FileInputStream serviceAccount =
-                    new FileInputStream("C:/Users/HP/Documents/Project/prueba/src/main/resources/Firebase/reslyapp-firebase-adminsdk-xem7v-762e48ee72.json");
+                    new FileInputStream(res.getFile().getPath());
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://reslyapp.firebaseio.com/")

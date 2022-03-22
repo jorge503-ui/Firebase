@@ -11,35 +11,11 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
-public class UsuarioServices {
+public class UsuarioServices implements CommonServices<Usuario> {
     public static final String COL_NAME="usuarios";
 
-    public String saveUsuario(Usuario usuario) throws InterruptedException, ExecutionException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<DocumentReference> collectionsApiFuture = dbFirestore.collection(COL_NAME).add(usuario);
-        usuario.setId(collectionsApiFuture.get().getId());
-        return collectionsApiFuture.get().getId();
-    }
-
-    public Usuario getUsuario(String id) throws InterruptedException, ExecutionException {
-        Firestore dbFirestore = FirestoreClient.getFirestore();
-        DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
-        ApiFuture<DocumentSnapshot> future = documentReference.get();
-
-        DocumentSnapshot document = future.get();
-
-        Usuario usuario = null;
-
-        if(document.exists()) {
-            usuario = document.toObject(Usuario.class);
-            usuario.setId(document.getId());
-            return usuario;
-        }else {
-            return null;
-        }
-    }
-
-    public List<Usuario> getUsuarios() throws InterruptedException, ExecutionException {
+    @Override
+    public List<Usuario> findAll() throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         List<Usuario> usuarios = new ArrayList<>();
 
@@ -56,15 +32,48 @@ public class UsuarioServices {
         return usuarios;
     }
 
-    public String updateUsuario(Usuario usuario) throws InterruptedException, ExecutionException {
+    @Override
+    public Usuario findById(String id) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(COL_NAME).document(usuario.getId()).set(usuario);
-        return collectionsApiFuture.get().getUpdateTime().toString();
+        DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
+        ApiFuture<DocumentSnapshot> future = documentReference.get();
+
+        DocumentSnapshot document = future.get();
+
+        Usuario usuario = new Usuario();
+
+        if(document.exists()) {
+            usuario = document.toObject(Usuario.class);
+            usuario.setId(document.getId());
+            return usuario;
+        }else {
+            return null;
+        }
     }
 
-    public String deleteUsuario(String id) {
+    @Override
+    public Usuario save(Usuario entity, String id) {
+        return null;
+    }
+
+    @Override
+    public Usuario save(Usuario entity) throws InterruptedException, ExecutionException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<DocumentReference> collectionsApiFuture = dbFirestore.collection(COL_NAME).add(entity);
+        entity.setId(collectionsApiFuture.get().getId());
+        return entity;
+    }
+
+    @Override
+    public Usuario update(Usuario entity) {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> collectionsApiFuture = dbFirestore.collection(COL_NAME).document(entity.getId()).set(entity);
+        return entity;
+    }
+
+    @Override
+    public void deleteById(String id) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> writeResult = dbFirestore.collection(COL_NAME).document(id).delete();
-        return "Document with Usuario ID "+id+" has been deleted";
     }
 }
