@@ -30,7 +30,8 @@ public class FBInitialize {
                     new FileInputStream(env.getProperty("GOOGLE_APPLICATION_CREDENTIALS"));
 
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    //.setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(GoogleCredentials.getApplicationDefault())
                     .setDatabaseUrl("https://reslyapp.firebaseio.com/")
                     .build();
 
